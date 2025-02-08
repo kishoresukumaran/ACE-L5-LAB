@@ -1,0 +1,10 @@
+global_vlans:
+  - id: 10
+    name: DMZ
+    state: active
+  - id: 20
+    name: WEB
+    state: active
+  - id: 30
+    name: APP
+    state: active

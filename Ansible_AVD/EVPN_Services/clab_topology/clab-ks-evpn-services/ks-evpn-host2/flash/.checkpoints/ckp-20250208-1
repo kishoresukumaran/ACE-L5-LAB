@@ -1,0 +1,56 @@
+! The checkpoint file saved at Sat Feb  8 02:45:01 2025 by cvpadmin
+! device: ks-evpn-host2 (cEOSLab, EOS-4.31.4M-37710335.4314M (engineering build))
+!
+no aaa root
+!
+username admin privilege 15 role network-admin secret sha512 $6$EjBfK.DluI/R1K0F$7VTeSSsDq2XZx.kTY4Qc6XG9NI3Z7s5MdryQ1tezGJsOQtOjfU/XGZj0RAigrbP3IgK3eWhKz1Mcb.NUrdZWC1
+!
+daemon TerminAttr
+   exec /usr/bin/TerminAttr -cvaddr=10.100.169.50:9910,10.100.169.51:9910,10.100.169.52:9910 -cvauth=token,/mnt/flash/token -cvvrf=MGMT -disableaaa
+   no shutdown
+!
+transceiver qsfp default-mode 4x10G
+!
+service routing protocols model multi-agent
+!
+hostname ks-evpn-host2
+!
+spanning-tree mode mstp
+!
+system l1
+   unsupported speed action error
+   unsupported error-correction action error
+!
+vrf instance MGMT
+!
+management api http-commands
+   protocol http
+   protocol https ssl profile eAPI
+   no shutdown
+   !
+   vrf MGMT
+      no shutdown
+!
+management security
+   ssl profile eAPI
+      cipher-list HIGH:!eNULL:!aNULL:!MD5:!ADH:!ANULL
+      certificate eAPI.crt key eAPI.key
+!
+interface Ethernet1
+!
+interface Ethernet2
+!
+interface Management0
+   description oob_management
+   vrf MGMT
+   ip address 172.120.120.19/24
+   ipv6 address 2001:172:120:120::a/80
+!
+no ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 172.120.120.1
+!
+ipv6 route vrf MGMT ::/0 2001:172:120:120::1
+!
+end

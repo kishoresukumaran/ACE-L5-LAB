@@ -1,0 +1,50 @@
+---
+path: "{{lookup('env','PWD')}}"
+
+CVP_CONFIGLETS:
+  Alias_test: "alias ship show ip interface brief"
+  MLAG_Left: "{{ lookup('file', '{{path}}/configlets/MLAG_Left.cfg') }}"
+  MLAG_Right: "{{ lookup('file', '{{path}}/configlets/MLAG_Right.cfg') }}"
+
+CVP_CONTAINERS:
+  DC1:
+    parentContainerName: Tenant
+  DC2:
+    parentContainerName: Tenant
+
+CVP_DEVICES_MLAG:
+  - fqdn: 'ks-l3ls-leaf1'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'Alias_test'
+      - 'RECONCILE_KSL3LSLEAF1'
+
+CVP_DEVICES_DEFAULT:
+  - fqdn: 'ks-l3ls-leaf1'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF1'
+  - fqdn: 'ks-l3ls-leaf2'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF2'
+  - fqdn: 'ks-l3ls-leaf3'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF3'
+  - fqdn: 'ks-l3ls-leaf4'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF4'
+  - fqdn: 'ks-l3ls-leaf5'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF5'
+  - fqdn: 'ks-l3ls-leaf6'
+    parentContainerName: 'KS-L3LS'
+    configlets:
+      - 'RECONCILE_KSL3LSLEAF6'
+
+
+
+

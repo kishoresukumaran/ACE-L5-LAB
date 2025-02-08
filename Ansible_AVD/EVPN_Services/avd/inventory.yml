@@ -1,0 +1,39 @@
+# inventory.yml
+DC1:
+  children:
+    CVP:
+      hosts:
+        cv_server: 
+          ansible_host: 10.100.169.50
+          ansible_user: cvpadmin
+          ansible_password: arastra
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_connection: httpapi
+    FABRIC:
+      children:
+        SPINES:
+          hosts:
+            SPINE1:
+              ansible_host: 172.120.120.11
+            SPINE2:
+              ansible_host: 172.120.120.12
+            SPINE3:
+              ansible_host: 172.120.120.13
+        LEAFS:
+          hosts:
+            LEAF1:
+              ansible_host: 172.120.120.14
+            LEAF2:
+              ansible_host: 172.120.120.15
+            LEAF3:
+              ansible_host: 172.120.120.16
+            LEAF4:
+              ansible_host: 172.120.120.17
+    EVPN_SERVICES:
+      children:
+        LEAFS:
+        SPINES:
+    ENDPOINT_CONNECT:
+      children:
+        LEAFS:

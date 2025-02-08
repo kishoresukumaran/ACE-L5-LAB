@@ -1,0 +1,41 @@
+all:
+  vars:
+    ansible_user: admin
+    ansible_network_os: eos
+# This section has Ansible connect to the eAPI interface
+    ansible_password: admin
+    ansible_connection: httpapi
+    ansible_httpapi_use_ssl: True
+    ansible_httpapi_validate_certs: False
+    ansible_httpapi_port: 443
+# This section will have Ansible connect via the SSH CLI
+    # ansible_connection: network_cli
+    # ansible_user: admin
+    # ansible_network_os: eos
+    # ansible_become: yes
+    # ansible_become_method: enable
+  children:
+    spines:
+      hosts:
+        spine1:
+          ansible_host: 172.110.110.11
+        spine2:
+          ansible_host: 172.110.110.12
+        spine3:
+          ansible_host: 172.110.110.13
+        spine4:
+          ansible_host: 172.110.110.14
+    leafs:
+      hosts:
+        leaf1:
+          ansible_host: 172.110.110.15
+        leaf2:
+          ansible_host: 172.110.110.16
+        leaf3:
+          ansible_host: 172.110.110.17
+        leaf4:
+          ansible_host: 172.110.110.18
+        leaf5:
+          ansible_host: 172.110.110.19
+        leaf6:
+          ansible_host: 172.110.110.20

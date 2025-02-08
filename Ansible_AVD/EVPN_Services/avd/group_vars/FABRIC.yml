@@ -1,0 +1,87 @@
+---
+
+fabric_name: FABRIC
+
+# Various fabric settings
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified
+ansible_connection: ansible.netcommon.httpapi
+#specifies we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: admin
+ansible_password: admin
+
+# User escalation (to enable mode)
+ansible_becmoe: true
+ansible_become_method: enable
+
+# Use SSL (HTTPS)
+ansible_httpapi_validate_certs: false
+
+# Enable VLAN aware bundles
+evpn_vlan_aware_bundles: false
+
+# Spine switches
+spine:
+  defaults:
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.101.0/24
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+    mlag: false
+  nodes:
+    - name: SPINE1
+      id: 11
+      mgmt_ip: 172.120.120.11/24
+    - name: SPINE2
+      id: 12
+      mgmt_ip: 172.120.120.12/24
+    - name: SPINE3
+      id: 13
+      mgmt_ip: 172.120.120.13/24
+
+# Leaf switches - Most leafs will be l3leafs, not l2leafs
+
+l3leaf:
+  defaults:
+    bgp_as: 65100-65199 # Gives a range that will be auto-assigned
+    loopback_ipv4_pool: 192.168.101.0/24 # This is loopback 0 for underlay
+    vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback 1 for VTEP
+    uplink_interfaces: [Ethernet1, Ethernet2, Ethernet3]
+    uplink_switches: [SPINE1, SPINE2, SPINE33]
+    uplink_ipv4_pool: 192.168.103.0/24 # for p2p interaces which will be chopped into /31 subs
+    mlag_interfaces: [Ethernet4,Ethernet5]
+    mlag_peer_ipv4_pool: 10.255.252.0/24 # MLAG Peer IPs
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+      - 'graceful-restart restart-time 300'
+      - 'graceful-restart' 
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 16384
+    mlag: true
+  node_groups:
+    - group: mlag1
+      nodes:
+        - name: LEAF1
+          id: 1
+          mgmt_ip: 172.120.120.14/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1, Ethernet1]
+        - name: LEAF2
+          id: 2
+          mgmt_ip: 172.120.120.15/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2, Ethernet2]
+    - group: mlag2
+      nodes:
+        - name: LEAF3
+          id: 3
+          mgmt_ip: 172.120.120.16/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3, Ethernet3]
+        - name: LEAF4
+          id: 4
+          mgmt_ip: 172.120.120.17/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet4]

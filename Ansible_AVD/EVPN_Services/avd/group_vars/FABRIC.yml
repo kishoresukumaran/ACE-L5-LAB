@@ -50,7 +50,7 @@ l3leaf:
     loopback_ipv4_pool: 192.168.101.0/24 # This is loopback 0 for underlay
     vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback 1 for VTEP
     uplink_interfaces: [Ethernet1, Ethernet2, Ethernet3]
-    uplink_switches: [SPINE1, SPINE2, SPINE33]
+    uplink_switches: [SPINE1, SPINE2, SPINE3]
     uplink_ipv4_pool: 192.168.103.0/24 # for p2p interaces which will be chopped into /31 subs
     mlag_interfaces: [Ethernet4,Ethernet5]
     mlag_peer_ipv4_pool: 10.255.252.0/24 # MLAG Peer IPs

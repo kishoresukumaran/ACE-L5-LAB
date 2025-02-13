@@ -1,21 +1,21 @@
 ---
 servers:
-  - name: HOST1
+  - name: ks-evpn-host1
     adapters:
       - endpoint_ports: [ Ethernet1, Ethernet2 ]
         switch_ports: [ Ethernet6, Ethernet6 ]
-        switches: [ LEAF1, LEAF2 ]
+        switches: [ ks-evpn-leaf1, ks-evpn-leaf2 ]
         vlans: 10
         mode: access
         spanning_tree_portfast: edge
         port_channel:
           description: Port_channel_1_host_1
           mode: active
-  - name: HOST2
+  - name: ks-evpn-host2
     adapters:
       - endpoint_ports: [ Ethernet1, Ethernet2 ]
         switch_ports: [ Ethernet6, Ethernet6 ]
-        switches: [ LEAF3, LEAF4 ]
+        switches: [ ks-evpn-leaf3, ks-evpn-leaf4 ]
         vlans: 20
         mode: access
         spanning_tree_portfast: edge

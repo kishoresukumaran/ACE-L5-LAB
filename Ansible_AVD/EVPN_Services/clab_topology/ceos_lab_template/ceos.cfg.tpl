@@ -25,6 +25,7 @@ management security
       certificate eAPI.crt key eAPI.key
 !
 management api http-commands
+   protocol http
    protocol https ssl profile eAPI
    no shutdown
    !

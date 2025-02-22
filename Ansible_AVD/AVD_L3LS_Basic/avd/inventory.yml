@@ -1,0 +1,58 @@
+---
+all:
+  children:
+    CVP_Cluster:
+      vars:
+        ansible_user: cvpadmin
+        ansible_password: arastra
+        ansible_connection: httpapi
+        ansible_httpapi_use_ssl: True
+        ansible_httpapi_validate_certs: False
+        ansible_network_os: eos
+        ansible_httpapi_port: 443
+      hosts:
+        cvp1:
+          ansible_httpapi_host: 10.100.169.50
+          ansible_host: 10.100.169.50
+    FABRIC:
+      vars:
+        ansible_user: admin
+        ansible_ssh_pass: admin
+        ansible_connection: httpapi
+        ansible_httpapi_use_ssl: True
+        ansible_httpapi_validate_certs: False
+        ansible_network_os: eos
+        ansible_httpapi_port: 443
+        ansible_become: yes
+        ansible_become_method: enable
+      children:
+        KS-L3LS-BASIC:
+          children:  
+            SPINES:
+              vars:
+                type: spine
+              hosts:
+                ks-l3ls-basic-spine1:
+                  ansible_host: 172.151.151.11
+                ks-l3ls-basic-spine2:
+                  ansible_host: 172.151.151.12
+                ks-l3ls-basic-spine3:
+                  ansible_host: 172.151.151.13
+            LEAFS:
+              vars:
+                type: l3leaf
+              hosts:
+                ks-l3ls-basic-leaf1:
+                  ansible_host: 172.151.151.14
+                ks-l3ls-basic-leaf2:
+                  ansible_host: 172.151.151.15
+                ks-l3ls-basic-leaf3:
+                  ansible_host: 172.151.151.16
+                ks-l3ls-basic-leaf4:
+                  ansible_host: 172.151.151.17
+    EVPN_SERVICES:
+      children:
+        LEAFS:
+    ENDPOINT_CONNECT:
+      children:
+        LEAFS: 

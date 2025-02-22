@@ -1,0 +1,15 @@
+---
+servers:
+  - name: host1
+    adapters:
+      - endpoint_ports: [ Ethernet1, Ethernet2 ]
+        switch_ports: [ Ethernet6, Ethernet6 ]
+        switches: [ ks-l3ls-basic-leaf1, ks-l3ls-basic-leaf2 ]
+        vlans: 10
+        mode: access
+        spanning_tree_portfast: edge
+        port_channel:
+          description: PortChannel host1
+          mode: active
+
+          

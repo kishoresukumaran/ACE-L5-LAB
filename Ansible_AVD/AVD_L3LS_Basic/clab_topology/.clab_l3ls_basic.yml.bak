@@ -1,0 +1,146 @@
+name: ks-l3ls-basic-services
+topology:
+  kinds:
+    ceos:
+      startup-config: ./ceos_lab_template/ceos.cfg.tpl
+      image: ceos:4.31.4M
+      exec:
+        - sleep 10
+        - FastCli -p 15 -c 'security pki key generate rsa 4096 eAPI.key'
+        - FastCli -p 15 -c 'security pki certificate generate self-signed eAPI.crt key eAPI.key generate rsa 4096 validity 30000 parameters common-name eAPI'
+      binds:
+      - ./sn/token:/mnt/flash/token:ro
+    linux:
+      image: alpine
+  defaults:
+    kind: ceos
+
+  nodes:
+    ks-l3ls-basic-spine1:
+      binds:
+        - ./sn/ks-l3ls-basic-spine1.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.11
+    ks-l3ls-basic-spine2:
+      binds:
+        - ./sn/ks-l3ls-basic-spine2.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.12
+    ks-l3ls-basic-spine3:
+      binds:
+        - ./sn/ks-l3ls-basic-spine3.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.13
+    ks-l3ls-basic-leaf1:
+      binds:
+        - ./sn/ks-l3ls-basic-leaf1.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.14
+    ks-l3ls-basic-leaf2:
+      binds:
+        - ./sn/ks-l3ls-basic-leaf2.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.15
+    ks-l3ls-basic-leaf3:
+      binds:
+        - ./sn/ks-l3ls-basic-leaf3.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.16
+    ks-l3ls-basic-leaf4:
+      binds:
+        - ./sn/ks-l3ls-basic-leaf4.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.17
+    ks-l3ls-basic-host1:
+      binds:
+        - ./sn/ks-l3ls-basic-host1.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.18
+    ks-l3ls-basic-host2:
+      binds:
+        - ./sn/ks-l3ls-basic-host2.txt:/mnt/flash/ceos-config:ro
+        - ./sn/token:/mnt/flash/token:ro
+      mgmt-ipv4: 172.151.151.19
+  
+  links:
+    
+  ##############################
+  # ks-l3ls-basic-spine to ks-l3ls-basic-leafs
+  ##############################
+    - endpoints:
+      - ks-l3ls-basic-spine1:eth1
+      - ks-l3ls-basic-leaf1:eth1
+    - endpoints:
+      - ks-l3ls-basic-spine1:eth2
+      - ks-l3ls-basic-leaf2:eth1
+    - endpoints:
+      - ks-l3ls-basic-spine1:eth3
+      - ks-l3ls-basic-leaf3:eth1
+    - endpoints:
+      - ks-l3ls-basic-spine1:eth4
+      - ks-l3ls-basic-leaf4:eth1
+
+    - endpoints:
+      - ks-l3ls-basic-spine2:eth1
+      - ks-l3ls-basic-leaf1:eth2
+    - endpoints:
+      - ks-l3ls-basic-spine2:eth2
+      - ks-l3ls-basic-leaf2:eth2
+    - endpoints:
+      - ks-l3ls-basic-spine2:eth3
+      - ks-l3ls-basic-leaf3:eth2
+    - endpoints:
+      - ks-l3ls-basic-spine2:eth4
+      - ks-l3ls-basic-leaf4:eth2
+
+    - endpoints:
+      - ks-l3ls-basic-spine3:eth1
+      - ks-l3ls-basic-leaf1:eth3
+    - endpoints:
+      - ks-l3ls-basic-spine3:eth2
+      - ks-l3ls-basic-leaf2:eth3
+    - endpoints:
+      - ks-l3ls-basic-spine3:eth3
+      - ks-l3ls-basic-leaf3:eth3
+    - endpoints:
+      - ks-l3ls-basic-spine3:eth4
+      - ks-l3ls-basic-leaf4:eth3
+  ##############################
+  # ks-l3ls-basic-leafs to ks-l3ls-basic-leafs
+  ##############################
+
+    - endpoints:
+      - ks-l3ls-basic-leaf1:eth4
+      - ks-l3ls-basic-leaf2:eth4
+    - endpoints:
+      - ks-l3ls-basic-leaf1:eth5
+      - ks-l3ls-basic-leaf2:eth5
+
+    - endpoints:
+      - ks-l3ls-basic-leaf3:eth4
+      - ks-l3ls-basic-leaf4:eth4
+    - endpoints:
+      - ks-l3ls-basic-leaf3:eth5
+      - ks-l3ls-basic-leaf4:eth5
+  ##############################
+  # ks-l3ls-basic-leafs to ks-l3ls-basic-hosts
+  ##############################
+
+    - endpoints:
+      - ks-l3ls-basic-leaf1:eth6
+      - ks-l3ls-basic-host1:eth1
+    - endpoints:
+      - ks-l3ls-basic-leaf2:eth6
+      - ks-l3ls-basic-host1:eth2
+
+    - endpoints:
+      - ks-l3ls-basic-leaf3:eth6
+      - ks-l3ls-basic-host2:eth1
+    - endpoints:
+      - ks-l3ls-basic-leaf4:eth6
+      - ks-l3ls-basic-host2:eth2
+
+mgmt:
+  network: ceos_clab_ks_l3ls_basic_services
+  ipv4-subnet: 172.151.151.0/24
+  ipv6-subnet: 2001:172:151:151::/80

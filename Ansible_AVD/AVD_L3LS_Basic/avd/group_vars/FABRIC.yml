@@ -1,0 +1,80 @@
+---
+fabric_name: FABRIC
+
+# Various fabric settings
+
+# Enable vlan aware bundles
+evpn_vlan_aware_bundles: false
+
+# Spine switches
+spine:
+  defaults:
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.101.0/24
+    mlag: false
+  nodes:
+    - name: ks-l3ls-basic-spine1
+      id: 11
+      mgmt_ip: 172.151.151.11/24
+    - name: ks-l3ls-basic-spine2
+      id: 12
+      mgmt_ip: 172.151.151.12/24
+    - name: ks-l3ls-basic-spine3
+      id: 13
+      mgmt_ip: 172.151.151.13/24
+
+# Leaf switches
+l3leaf:
+  defaults:
+    bgp_as: 65100-65199
+    loopback_ipv4_pool: 192.168.101.0/24 # This is loopback0 underlay
+    vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback1 (VTEP)
+    uplink_interfaces: [ Ethernet1, Ethernet2, Ethernet3 ]
+    uplink_switches: [ ks-l3ls-basic-spine1, ks-l3ls-basic-spine2, ks-l3ls-basic-spine3 ]
+    uplink_ipv4_pool: 192.168.103.0/24 # For the p2p interfaces to chopped up into /31s
+    mlag_interfaces: [ Ethernet4, Ethernet5 ] # MLAG peer link
+    mlag_peer_ipv4_pool: 10.255.252.0/24 # MLAG peer IPs
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24 # iBGP peering between MLAG peers
+    virtual_router_mac_address: 00:1c:73:00:00:99 # The vMAC for the anycast gateways
+    spanning_tree_mode: mstp # Spanning Tree is still enabled even in EVPN setups
+    spanning_tree_priority: 16384
+    mlag: true # By default, use MLAG
+  node_groups:
+    - group: mlag1
+      nodes:
+        - name: ks-l3ls-basic-leaf1
+          id: 1
+          mgmt_ip: 172.151.151.14/24
+          uplink_switch_interfaces: [Ethernet1, Ethernet1, Ethernet1 ]
+        - name: ks-l3ls-basic-leaf2
+          id: 2
+          mgmt_ip: 172.151.151.15/24
+          uplink_switch_interfaces: [Ethernet2, Ethernet2, Ethernet2 ]
+    - group: mlag2
+      bgp_as: 65299 # Overriden automatic allocation for host4/R1 peering
+      nodes:
+        - name: ks-l3ls-basic-leaf3
+          id: 3
+          mgmt_ip: 172.151.151.16/24
+          uplink_switch_interfaces: [ Ethernet3, Ethernet3, Ethernet3 ]
+        - name: ks-l3ls-basic-leaf4
+          id: 4
+          mgmt_ip: 172.151.151.17/24
+          uplink_switch_interfaces: [ Ethernet4, Ethernet4, Ethernet4 ]
+
+# There's an issue with vEOS with larger MTUs
+p2p_uplinks_mtu: 1550
+
+# BFD Settings
+bfd_multihop:
+  interval: 1200
+  min_rx: 1200
+  multiplier: 3
+
+# Needed for vEOS/cEOS
+bgp_update_wait_install: false
+bgp_update_wait_for_convergence: false
+
+# Needed for Arista ATD Lab Environment
+mgmt_interface: Management0
+mgmt_interface_vrf: MGMT

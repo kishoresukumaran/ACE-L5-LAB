@@ -1,3 +1,6 @@
 Ansible_AVD/EVPN_Services/clab_topology/clab-ks-evpn-services/
 Ansible_AVD/EVPN_Services/avd/documentation
 Ansible_AVD/EVPN_Services/avd/intended
+AVD_L3LS_Basic/clab_topology/clab-ks-l3ls-basic-services/
+Ansible_AVD/AVD_L3LS_Basic/avd/documentation
+Ansible_AVD/AVD_L3LS_Basic/avd/intended
